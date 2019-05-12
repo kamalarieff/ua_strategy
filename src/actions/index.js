@@ -15,20 +15,14 @@ export const insertAd = category => {
   };
 };
 
-export const insertCarAd = () => {
-  return {
-    type: "INSERT_CAR_AD"
-  };
-};
-
-export const insertPropAd = () => {
-  return {
-    type: "INSERT_PROP_AD"
-  };
-};
-
 export const buyCredits = () => {
   return {
     type: "BUY_CREDITS"
+  };
+};
+
+export const enablePostAds = () => {
+  return {
+    type: "MAKE_ADS_POSTABLE"
   };
 };

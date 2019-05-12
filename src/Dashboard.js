@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { insertCarAd, buyCredits, insertAd } from "./actions";
+import { buyCredits, insertAd, enablePostAds } from "./actions";
 
 const Container = styled.div`
   display: grid;
@@ -53,7 +53,7 @@ const CategoryLimitWithButton1 = props => {
       <Button
         variant="contained"
         color="primary"
-        disabled={props.count === props.limit && props.credits === 0}
+        disabled={!props.disabled}
         style={{ margin: "20px" }}
         onClick={props.clickHandler}
       >
@@ -78,6 +78,7 @@ const Dashboard = props => {
           title="Cars"
           count={categories.cars.currentCount}
           limit={1}
+          disabled={categories.cars.isNextAdPostable}
           clickHandler={() => props.insertAd("cars")}
           credits={credits}
         />
@@ -85,6 +86,7 @@ const Dashboard = props => {
           title="Property"
           count={categories.properties.currentCount}
           limit={1}
+          disabled={categories.properties.isNextAdPostable}
           clickHandler={() => props.insertAd("properties")}
           credits={credits}
         />
@@ -92,6 +94,7 @@ const Dashboard = props => {
           title="Jobs"
           count={categories.jobs.currentCount}
           limit={1}
+          disabled={categories.jobs.isNextAdPostable}
           clickHandler={() => props.insertAd("jobs")}
           credits={credits}
         />
@@ -99,6 +102,7 @@ const Dashboard = props => {
           title="Mobile Phones"
           count={categories.mobilePhones.currentCount}
           limit={1}
+          disabled={categories.mobilePhones.isNextAdPostable}
           clickHandler={() => props.insertAd("mobilePhones")}
           credits={credits}
         />
@@ -106,26 +110,22 @@ const Dashboard = props => {
           title="Everything else"
           count={categories.everythingElse.currentCount}
           limit={1}
+          disabled={categories.everythingElse.isNextAdPostable}
           clickHandler={() => props.insertAd("everythingElse")}
           credits={credits}
         />
       </Chart>
       <InsertAd>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ margin: "10px" }}
-          onClick={() => props.insertCarAd()}
-        >
-          Insert Ad
-        </Button>
         <Credits>
           {credits} Credits
           <Button
             variant="contained"
             color="primary"
             style={{ margin: "10px" }}
-            onClick={() => props.buyCredits()}
+            onClick={() => {
+              props.buyCredits();
+              props.enablePostAds();
+            }}
           >
             Buy Credits
           </Button>
@@ -140,14 +140,12 @@ const mapStateToProps = state => ({
   ...state
 });
 
-// const mapDispatchToProps = dispatch => ({ dispatch });
-
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      insertCarAd: insertCarAd,
       buyCredits: buyCredits,
-      insertAd: insertAd
+      insertAd: insertAd,
+      enablePostAds
     },
     dispatch
   );

@@ -7,47 +7,97 @@ import { combineReducers } from "redux";
 const initialState = {
   categories: {
     cars: {
-      currentCount: 0
+      isNextAdPostable: true,
+      currentCount: 0,
+      limit: 1
     },
     properties: {
-      currentCount: 0
+      isNextAdPostable: true,
+      currentCount: 0,
+      limit: 1
     },
     jobs: {
-      currentCount: 0
+      isNextAdPostable: true,
+      currentCount: 0,
+      limit: 1
     },
     mobilePhones: {
-      currentCount: 0
+      isNextAdPostable: true,
+      currentCount: 0,
+      limit: 1
     },
     everythingElse: {
-      currentCount: 0
+      isNextAdPostable: true,
+      currentCount: 0,
+      limit: Infinity
     }
   },
   credits: 0
 };
+
+function isEnoughCredits(credits) {
+  if (credits > 0) return true;
+  return false;
+}
+
+function hasFreeAds(currentCount, freeAdsCount) {
+  if (currentCount < freeAdsCount) return true;
+  return false;
+}
+
 const simpleReducer = (state = initialState, action) => {
   switch (action.type) {
     case "SIMPLE_ACTION":
       return {
         result: action.payload
       };
-    case "INSERT_AD":
-      let {
-        [action.payload]: { currentCount: newCount }
+    case "INSERT_AD": {
+      const {
+        [action.payload]: { currentCount },
+        [action.payload]: { limit }
       } = state.categories;
-      newCount++;
+
+      const { credits } = state;
+      const newCredits = credits >= limit ? credits - 10 : credits;
+      const newCount = currentCount + 1;
+      const isNextAdPostable =
+        isEnoughCredits(newCredits) || hasFreeAds(newCount, limit);
 
       const result = {
         categories: {
           ...state.categories,
           ...{
             [action.payload]: {
-              currentCount: newCount
+              currentCount: newCount,
+              isNextAdPostable,
+              limit
             }
           }
-        }
+        },
+        credits: newCredits
       };
-
       return { ...state, ...result };
+    }
+    case "MAKE_ADS_POSTABLE": {
+      const { categories, credits: tempCredits } = state;
+      const categoriesArray = Object.keys(categories);
+
+      const result = categoriesArray.reduce((accumulator, currentValue) => {
+        const temp = {
+          isNextAdPostable:
+            isEnoughCredits(tempCredits) ||
+            hasFreeAds(
+              categories[currentValue].currentCount,
+              categories[currentValue].limit
+            )
+        };
+        return {
+          ...accumulator,
+          [currentValue]: { ...categories[currentValue], ...temp }
+        };
+      }, {});
+      return { ...state, categories: result };
+    }
     case "INSERT_CAR_AD":
       return { ...state, ...state.categories.cars.currentCount++ };
     case "BUY_CREDITS":
