@@ -57,20 +57,44 @@ const simpleReducer = (state = initialState, action) => {
         [action.payload]: { limit }
       } = state.categories;
 
-      const { credits } = state;
-      const newCredits = credits >= limit ? credits - 10 : credits;
+      const { categories, credits } = state;
+      const newCredits = currentCount >= limit ? credits - 10 : credits;
       const newCount = currentCount + 1;
       const isNextAdPostable =
         isEnoughCredits(newCredits) || hasFreeAds(newCount, limit);
 
+      const categoriesArray = Object.keys(categories);
+      const recalculateAllCategories = categoriesArray.reduce(
+        (accumulator, currentValue) => {
+          const isNextAdPostable =
+            isEnoughCredits(newCredits) ||
+            hasFreeAds(
+              categories[currentValue].currentCount,
+              categories[currentValue].limit
+            );
+          return {
+            ...accumulator,
+            [currentValue]: {
+              isNextAdPostable,
+              currentCount: categories[currentValue].currentCount,
+              limit: categories[currentValue].limit
+            }
+          };
+        },
+        {}
+      );
+
       const result = {
         categories: {
           ...state.categories,
+          ...recalculateAllCategories,
           ...{
             [action.payload]: {
-              currentCount: newCount,
-              isNextAdPostable,
-              limit
+              ...{
+                currentCount: newCount,
+                isNextAdPostable,
+                limit
+              }
             }
           }
         },
