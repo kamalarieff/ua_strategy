@@ -36,25 +36,46 @@ const Chart = styled.div`
 `;
 
 const InsertAd = styled.div`
+  display: grid;
+  grid-template-rows: 2;
+  justify-items: stretch;
+  grid-column-start: 3;
+  grid-row-start: 1;
+  border: 1px solid black;
+  grid-row-gap: 10px;
+  padding: 10px;
+`;
+
+const Profile = styled.div`
+  grid-row-start: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  grid-column-start: 3;
-  grid-row-start: 1;
   border: 1px solid black;
 `;
 
 const Credits = styled.div`
   display: flex;
   flex-direction: column;
-  text-align: center;
+  justify-content: center;
+  align-items: center;
+  grid-row-start: 2;
+  border: 1px solid black;
+  width: 100%;
 `;
 
 const ToastrContainer = styled.div`
   display: flex;
   justify-content: center;
   text-align: center;
+`;
+
+const Badge = styled.div`
+  background-color: ${props =>
+    props.visibleToMeOnly ? "palevioletred" : "cadetblue"};
+  border-radius: 10px;
+  padding: 3px 10px;
 `;
 
 const CategoryLimitWithButton1 = props => {
@@ -173,6 +194,17 @@ const Dashboard = props => {
         />
       </Chart>
       <InsertAd>
+        <Profile>
+          <div>Kamal</div>
+          {me.isCarVerified ? (
+            <>
+              <Badge>Car verified</Badge>
+              <Badge visibleToMeOnly>{me.carStoreType}</Badge>
+            </>
+          ) : (
+            ""
+          )}
+        </Profile>
         <Credits>
           {credits} Credits
           <Button
