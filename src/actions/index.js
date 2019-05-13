@@ -33,3 +33,10 @@ export const enablePostAds = () => {
     type: "MAKE_ADS_POSTABLE"
   };
 };
+
+export const chooseStoreType = type => {
+  return {
+    type: "CHOOSE_STORE_TYPE",
+    payload: type
+  };
+};

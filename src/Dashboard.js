@@ -9,6 +9,8 @@ import {
   insertPaidAd,
   enablePostAds
 } from "./actions";
+import { toastr } from "react-redux-toastr";
+import "react-redux-toastr/lib/css/react-redux-toastr.min.css";
 
 const Container = styled.div`
   display: grid;
@@ -83,7 +85,7 @@ const StyledCategoryLimitWithButton1 = styled(CategoryLimitWithButton1)`
 `;
 
 const Dashboard = props => {
-  const { categories, credits } = props.simpleReducer;
+  const { categories, credits, me } = props.simpleReducer;
 
   return (
     <Container>
@@ -94,7 +96,14 @@ const Dashboard = props => {
           limit={1}
           isNextPaidAdPostable={categories.cars.isNextPaidAdPostable}
           isNextFreeAdPostable={categories.cars.isNextFreeAdPostable}
-          insertPaidAd={() => props.insertPaidAd("cars")}
+          insertPaidAd={
+            !me.isCarVerified
+              ? () =>
+                  toastr.warning(
+                    "You need to verify before you can insert a car ad"
+                  )
+              : () => props.insertPaidAd("cars")
+          }
           insertFreeAd={() => props.insertFreeAd("cars")}
           credits={credits}
         />

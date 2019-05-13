@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import { reducer as toastrReducer } from "react-redux-toastr";
 
 /*
  src/reducers/simpleReducer.js
@@ -37,7 +38,11 @@ const initialState = {
       limit: Infinity
     }
   },
-  credits: 0
+  credits: 0,
+  me: {
+    isCarVerified: false,
+    carStoreType: false
+  }
 };
 
 function isEnoughCredits(credits) {
@@ -153,6 +158,14 @@ const simpleReducer = (state = initialState, action) => {
       return { ...state, ...state.categories.cars.currentCount++ };
     case "BUY_CREDITS":
       return { ...state, ...{ credits: 50 } };
+    case "CHOOSE_STORE_TYPE": {
+      console.log(action.payload);
+
+      return {
+        ...state,
+        ...{ me: { isCarVerified: true, carStoreType: action.payload } }
+      };
+    }
     default:
       return state;
   }
@@ -162,5 +175,6 @@ const simpleReducer = (state = initialState, action) => {
  src/reducers/rootReducer.js
 */
 export default combineReducers({
-  simpleReducer
+  simpleReducer,
+  toastr: toastrReducer
 });
