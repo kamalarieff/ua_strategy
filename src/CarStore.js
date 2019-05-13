@@ -30,49 +30,58 @@ const Plan = styled.div`
   grid-column-start: ${props => props.position};
 `;
 
-const CarStore = ({ chooseStoreType }) => (
-  <Container>
-    <Picker>
-      <Plan position={1}>
-        <div>Basic</div>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ margin: "20px" }}
-          onClick={() => chooseStoreType("basic")}
-        >
-          Choose
-        </Button>
-      </Plan>
-      <Plan position={2}>
-        <div>Plus</div>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ margin: "20px" }}
-          onClick={() => chooseStoreType("plus")}
-        >
-          Choose
-        </Button>
-      </Plan>
-      <Plan position={3}>
-        <div>Premium</div>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ margin: "20px" }}
-          onClick={() => chooseStoreType("premium")}
-        >
-          Choose
-        </Button>
-      </Plan>
-    </Picker>
-  </Container>
-);
+const CarStore = props => {
+  const { chooseStoreType, history } = props;
 
-const mapStateToProps = state => ({
-  ...state
-});
+  return (
+    <Container>
+      <Picker>
+        <Plan position={1}>
+          <div>Basic</div>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ margin: "20px" }}
+            onClick={() => {
+              chooseStoreType("basic");
+              history.push("/dashboard");
+            }}
+          >
+            Choose
+          </Button>
+        </Plan>
+        <Plan position={2}>
+          <div>Plus</div>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ margin: "20px" }}
+            onClick={() => {
+              chooseStoreType("plus");
+              history.push("/dashboard");
+            }}
+          >
+            Choose
+          </Button>
+        </Plan>
+        <Plan position={3}>
+          <div>Premium</div>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ margin: "20px" }}
+            onClick={() => {
+              chooseStoreType("premium");
+              history.push("/dashboard");
+            }}
+          >
+            Choose
+          </Button>
+        </Plan>
+      </Picker>
+    </Container>
+  );
+};
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(

@@ -1,16 +1,29 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Route, Link, BrowserRouter as Router, Switch } from "react-router-dom";
 import "./index.css";
 import App from "./App";
-import Dashboard1 from "./Dashboard";
-import Dashboard from "./CarStore";
+import Dashboard from "./Dashboard";
+import CarStore from "./CarStore";
 import * as serviceWorker from "./serviceWorker";
 import { Provider } from "react-redux";
-import configureStore from "./store";
+import { ConnectedRouter } from "connected-react-router";
+import configureStore, { history } from "./store";
 import ReduxToastr from "react-redux-toastr";
 
 ReactDOM.render(
   <Provider store={configureStore()}>
+    <ConnectedRouter history={history}>
+      {/* place ConnectedRouter under Provider */}
+      <>
+        {/* your usual react-router v4/v5 routing */}
+        <Switch>
+          <Route exact path="/" component={App} />
+          <Route exact path="/dashboard" component={Dashboard} />
+          <Route exact path="/carstore" component={CarStore} />>
+        </Switch>
+      </>
+    </ConnectedRouter>
     <ReduxToastr
       timeOut={4000}
       newestOnTop={false}
@@ -21,7 +34,6 @@ ReactDOM.render(
       progressBar
       closeOnToastrClick
     />
-    <Dashboard />
   </Provider>,
   document.getElementById("root")
 );

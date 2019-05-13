@@ -12,7 +12,7 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-function App() {
+function App({ history }) {
   return (
     <Paper
       elevation={2}
@@ -36,7 +36,12 @@ function App() {
         margin="normal"
         variant="outlined"
       />
-      <Button variant="contained" color="primary" style={{ marginTop: "20px" }}>
+      <Button
+        variant="contained"
+        color="primary"
+        style={{ marginTop: "20px" }}
+        onClick={() => history.push("dashboard")}
+      >
         Login
       </Button>
     </Paper>

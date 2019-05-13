@@ -51,6 +51,12 @@ const Credits = styled.div`
   text-align: center;
 `;
 
+const ToastrContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  text-align: center;
+`;
+
 const CategoryLimitWithButton1 = props => {
   return (
     <div className={props.className}>
@@ -86,6 +92,22 @@ const StyledCategoryLimitWithButton1 = styled(CategoryLimitWithButton1)`
 
 const Dashboard = props => {
   const { categories, credits, me } = props.simpleReducer;
+  const { history } = props;
+
+  const toastrOptions = {
+    timeOut: 3000, // by setting to 0 it will prevent the auto close,
+    component: (
+      <ToastrContainer>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => history.push("/carstore")}
+        >
+          Verify
+        </Button>
+      </ToastrContainer>
+    )
+  };
 
   return (
     <Container>
@@ -100,7 +122,9 @@ const Dashboard = props => {
             !me.isCarVerified
               ? () =>
                   toastr.warning(
-                    "You need to verify before you can insert a car ad"
+                    "",
+                    "You need to verify before you can insert a car ad",
+                    toastrOptions
                   )
               : () => props.insertPaidAd("cars")
           }

@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import { reducer as toastrReducer } from "react-redux-toastr";
+import { connectRouter } from "connected-react-router";
 
 /*
  src/reducers/simpleReducer.js
@@ -63,12 +64,13 @@ const simpleReducer = (state = initialState, action) => {
       };
     case "INSERT_FREE_AD": {
       const {
+        [action.payload]: { isNextPaidAdPostable },
         [action.payload]: { currentCount },
         [action.payload]: { limit }
       } = state.categories;
 
       const newCount = currentCount + 1;
-      const isNextAdPostable = hasFreeAds(newCount, limit);
+      const isNextFreeAdPostable = hasFreeAds(newCount, limit);
 
       const result = {
         categories: {
@@ -76,8 +78,9 @@ const simpleReducer = (state = initialState, action) => {
           ...{
             [action.payload]: {
               ...{
+                isNextFreeAdPostable,
+                isNextPaidAdPostable,
                 currentCount: newCount,
-                isNextAdPostable,
                 limit
               }
             }
@@ -159,8 +162,6 @@ const simpleReducer = (state = initialState, action) => {
     case "BUY_CREDITS":
       return { ...state, ...{ credits: 50 } };
     case "CHOOSE_STORE_TYPE": {
-      console.log(action.payload);
-
       return {
         ...state,
         ...{ me: { isCarVerified: true, carStoreType: action.payload } }
@@ -174,7 +175,9 @@ const simpleReducer = (state = initialState, action) => {
 /*
  src/reducers/rootReducer.js
 */
-export default combineReducers({
-  simpleReducer,
-  toastr: toastrReducer
-});
+export default history =>
+  combineReducers({
+    simpleReducer,
+    toastr: toastrReducer,
+    router: connectRouter(history)
+  });
