@@ -7,27 +7,32 @@ import { combineReducers } from "redux";
 const initialState = {
   categories: {
     cars: {
-      isNextAdPostable: true,
+      isNextFreeAdPostable: true,
+      isNextPaidAdPostable: false,
       currentCount: 0,
       limit: 1
     },
     properties: {
-      isNextAdPostable: true,
+      isNextFreeAdPostable: true,
+      isNextPaidAdPostable: false,
       currentCount: 0,
       limit: 1
     },
     jobs: {
-      isNextAdPostable: true,
+      isNextFreeAdPostable: true,
+      isNextPaidAdPostable: false,
       currentCount: 0,
       limit: 1
     },
     mobilePhones: {
-      isNextAdPostable: true,
+      isNextFreeAdPostable: true,
+      isNextPaidAdPostable: false,
       currentCount: 0,
       limit: 1
     },
     everythingElse: {
-      isNextAdPostable: true,
+      isNextFreeAdPostable: true,
+      isNextPaidAdPostable: false,
       currentCount: 0,
       limit: Infinity
     }
@@ -51,31 +56,52 @@ const simpleReducer = (state = initialState, action) => {
       return {
         result: action.payload
       };
-    case "INSERT_AD": {
+    case "INSERT_FREE_AD": {
       const {
         [action.payload]: { currentCount },
         [action.payload]: { limit }
       } = state.categories;
 
-      const { categories, credits } = state;
-      const newCredits = currentCount >= limit ? credits - 10 : credits;
       const newCount = currentCount + 1;
-      const isNextAdPostable =
-        isEnoughCredits(newCredits) || hasFreeAds(newCount, limit);
+      const isNextAdPostable = hasFreeAds(newCount, limit);
+
+      const result = {
+        categories: {
+          ...state.categories,
+          ...{
+            [action.payload]: {
+              ...{
+                currentCount: newCount,
+                isNextAdPostable,
+                limit
+              }
+            }
+          }
+        }
+      };
+      return { ...state, ...result };
+    }
+    case "INSERT_PAID_AD": {
+      const {
+        [action.payload]: { isNextFreeAdPostable },
+        [action.payload]: { currentCount },
+        [action.payload]: { limit }
+      } = state.categories;
+      const { categories, credits } = state;
+
+      const newCredits = credits - 10;
+      const newCount = currentCount + 1;
+      const isNextPaidAdPostable = isEnoughCredits(newCredits);
 
       const categoriesArray = Object.keys(categories);
       const recalculateAllCategories = categoriesArray.reduce(
         (accumulator, currentValue) => {
-          const isNextAdPostable =
-            isEnoughCredits(newCredits) ||
-            hasFreeAds(
-              categories[currentValue].currentCount,
-              categories[currentValue].limit
-            );
           return {
             ...accumulator,
             [currentValue]: {
-              isNextAdPostable,
+              isNextFreeAdPostable:
+                categories[currentValue].isNextFreeAdPostable,
+              isNextPaidAdPostable,
               currentCount: categories[currentValue].currentCount,
               limit: categories[currentValue].limit
             }
@@ -91,8 +117,9 @@ const simpleReducer = (state = initialState, action) => {
           ...{
             [action.payload]: {
               ...{
+                isNextFreeAdPostable,
+                isNextPaidAdPostable,
                 currentCount: newCount,
-                isNextAdPostable,
                 limit
               }
             }
@@ -108,7 +135,7 @@ const simpleReducer = (state = initialState, action) => {
 
       const result = categoriesArray.reduce((accumulator, currentValue) => {
         const temp = {
-          isNextAdPostable:
+          isNextPaidAdPostable:
             isEnoughCredits(tempCredits) ||
             hasFreeAds(
               categories[currentValue].currentCount,

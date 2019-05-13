@@ -8,9 +8,16 @@ export const simpleAction = () => dispatch => {
   });
 };
 
-export const insertAd = category => {
+export const insertFreeAd = category => {
   return {
-    type: "INSERT_AD",
+    type: "INSERT_FREE_AD",
+    payload: category
+  };
+};
+
+export const insertPaidAd = category => {
+  return {
+    type: "INSERT_PAID_AD",
     payload: category
   };
 };

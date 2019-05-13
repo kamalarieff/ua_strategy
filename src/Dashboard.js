@@ -3,7 +3,12 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { buyCredits, insertAd, enablePostAds } from "./actions";
+import {
+  buyCredits,
+  insertFreeAd,
+  insertPaidAd,
+  enablePostAds
+} from "./actions";
 
 const Container = styled.div`
   display: grid;
@@ -53,11 +58,20 @@ const CategoryLimitWithButton1 = props => {
       <Button
         variant="contained"
         color="primary"
-        disabled={!props.disabled}
         style={{ margin: "20px" }}
-        onClick={props.clickHandler}
+        disabled={!props.isNextFreeAdPostable}
+        onClick={props.insertFreeAd}
       >
-        Insert Ad
+        Insert Free Ad
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        disabled={!props.isNextPaidAdPostable}
+        style={{ margin: "20px" }}
+        onClick={props.insertPaidAd}
+      >
+        Insert Paid Ad
       </Button>
     </div>
   );
@@ -78,40 +92,50 @@ const Dashboard = props => {
           title="Cars"
           count={categories.cars.currentCount}
           limit={1}
-          disabled={categories.cars.isNextAdPostable}
-          clickHandler={() => props.insertAd("cars")}
+          isNextPaidAdPostable={categories.cars.isNextPaidAdPostable}
+          isNextFreeAdPostable={categories.cars.isNextFreeAdPostable}
+          insertPaidAd={() => props.insertPaidAd("cars")}
+          insertFreeAd={() => props.insertFreeAd("cars")}
           credits={credits}
         />
         <StyledCategoryLimitWithButton1
           title="Property"
           count={categories.properties.currentCount}
           limit={1}
-          disabled={categories.properties.isNextAdPostable}
-          clickHandler={() => props.insertAd("properties")}
+          isNextPaidAdPostable={categories.properties.isNextPaidAdPostable}
+          isNextFreeAdPostable={categories.properties.isNextFreeAdPostable}
+          insertPaidAd={() => props.insertPaidAd("properties")}
+          insertFreeAd={() => props.insertFreeAd("properties")}
           credits={credits}
         />
         <StyledCategoryLimitWithButton1
           title="Jobs"
           count={categories.jobs.currentCount}
           limit={1}
-          disabled={categories.jobs.isNextAdPostable}
-          clickHandler={() => props.insertAd("jobs")}
+          isNextPaidAdPostable={categories.jobs.isNextPaidAdPostable}
+          isNextFreeAdPostable={categories.jobs.isNextFreeAdPostable}
+          insertPaidAd={() => props.insertPaidAd("jobs")}
+          insertFreeAd={() => props.insertFreeAd("jobs")}
           credits={credits}
         />
         <StyledCategoryLimitWithButton1
           title="Mobile Phones"
           count={categories.mobilePhones.currentCount}
           limit={1}
-          disabled={categories.mobilePhones.isNextAdPostable}
-          clickHandler={() => props.insertAd("mobilePhones")}
+          isNextPaidAdPostable={categories.mobilePhones.isNextPaidAdPostable}
+          isNextFreeAdPostable={categories.mobilePhones.isNextFreeAdPostable}
+          insertPaidAd={() => props.insertPaidAd("mobilePhones")}
+          insertFreeAd={() => props.insertFreeAd("mobilePhones")}
           credits={credits}
         />
         <StyledCategoryLimitWithButton1
           title="Everything else"
           count={categories.everythingElse.currentCount}
           limit={1}
-          disabled={categories.everythingElse.isNextAdPostable}
-          clickHandler={() => props.insertAd("everythingElse")}
+          isNextPaidAdPostable={categories.everythingElse.isNextPaidAdPostable}
+          isNextFreeAdPostable={categories.everythingElse.isNextFreeAdPostable}
+          insertPaidAd={() => props.insertPaidAd("everythingElse")}
+          insertFreeAd={() => props.insertFreeAd("everythingElse")}
           credits={credits}
         />
       </Chart>
@@ -144,7 +168,8 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
       buyCredits: buyCredits,
-      insertAd: insertAd,
+      insertFreeAd,
+      insertPaidAd,
       enablePostAds
     },
     dispatch
