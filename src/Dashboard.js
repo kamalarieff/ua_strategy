@@ -12,6 +12,7 @@ import {
 import { toastr } from "react-redux-toastr";
 import "react-redux-toastr/lib/css/react-redux-toastr.min.css";
 import Edit from "./Edit";
+import Profile from "./Profile";
 
 const Container = styled.div`
   display: grid;
@@ -47,15 +48,6 @@ const InsertAd = styled.div`
   padding: 10px;
 `;
 
-const Profile = styled.div`
-  grid-row-start: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  border: 1px solid black;
-`;
-
 const Credits = styled.div`
   display: flex;
   flex-direction: column;
@@ -70,13 +62,6 @@ const ToastrContainer = styled.div`
   display: flex;
   justify-content: center;
   text-align: center;
-`;
-
-const Badge = styled.div`
-  background-color: ${props =>
-    props.visibleToMeOnly ? "palevioletred" : "cadetblue"};
-  border-radius: 10px;
-  padding: 3px 10px;
 `;
 
 const CategoryLimitWithButton1 = props => {
@@ -195,17 +180,7 @@ const Dashboard = props => {
         />
       </Chart>
       <InsertAd>
-        <Profile>
-          <div>Kamal</div>
-          {me.isCarVerified ? (
-            <>
-              <Badge>Car verified</Badge>
-              <Badge visibleToMeOnly>{me.carStoreType}</Badge>
-            </>
-          ) : (
-            ""
-          )}
-        </Profile>
+        <Profile />
         <Credits>
           {credits} Credits
           <Button
