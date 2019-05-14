@@ -11,6 +11,7 @@ const initialState = {
     cars: {
       isNextFreeAdPostable: true,
       isNextPaidAdPostable: false,
+      isProfileActivated: false,
       freeAdsCount: 0,
       paidAdsCount: 0,
       currentCount: 0,
@@ -19,6 +20,7 @@ const initialState = {
     properties: {
       isNextFreeAdPostable: true,
       isNextPaidAdPostable: false,
+      isProfileActivated: false,
       freeAdsCount: 0,
       paidAdsCount: 0,
       currentCount: 0,
@@ -27,6 +29,7 @@ const initialState = {
     jobs: {
       isNextFreeAdPostable: true,
       isNextPaidAdPostable: false,
+      isProfileActivated: false,
       freeAdsCount: 0,
       paidAdsCount: 0,
       currentCount: 0,
@@ -35,6 +38,7 @@ const initialState = {
     mobilePhones: {
       isNextFreeAdPostable: true,
       isNextPaidAdPostable: false,
+      isProfileActivated: false,
       freeAdsCount: 0,
       paidAdsCount: 0,
       currentCount: 0,
@@ -43,6 +47,7 @@ const initialState = {
     everythingElse: {
       isNextFreeAdPostable: true,
       isNextPaidAdPostable: false,
+      isProfileActivated: false,
       freeAdsCount: 0,
       paidAdsCount: 0,
       currentCount: 0,
@@ -121,6 +126,7 @@ const simpleReducer = (state = initialState, action) => {
               isNextFreeAdPostable:
                 categories[currentValue].isNextFreeAdPostable,
               isNextPaidAdPostable,
+              isProfileActivated: categories[currentValue].isProfileActivated,
               freeAdsCount: categories[currentValue].freeAdsCount,
               paidAdsCount: categories[currentValue].paidAdsCount,
               currentCount: categories[currentValue].currentCount,
@@ -136,7 +142,8 @@ const simpleReducer = (state = initialState, action) => {
         ...{
           currentCount: newCount,
           paidAdsCount: newPaidAdsCount,
-          isNextPaidAdPostable
+          isNextPaidAdPostable,
+          isProfileActivated: true
         }
       };
 
