@@ -11,30 +11,40 @@ const initialState = {
     cars: {
       isNextFreeAdPostable: true,
       isNextPaidAdPostable: false,
+      freeAdsCount: 0,
+      paidAdsCount: 0,
       currentCount: 0,
       limit: 1
     },
     properties: {
       isNextFreeAdPostable: true,
       isNextPaidAdPostable: false,
+      freeAdsCount: 0,
+      paidAdsCount: 0,
       currentCount: 0,
       limit: 1
     },
     jobs: {
       isNextFreeAdPostable: true,
       isNextPaidAdPostable: false,
+      freeAdsCount: 0,
+      paidAdsCount: 0,
       currentCount: 0,
       limit: 1
     },
     mobilePhones: {
       isNextFreeAdPostable: true,
       isNextPaidAdPostable: false,
+      freeAdsCount: 0,
+      paidAdsCount: 0,
       currentCount: 0,
       limit: 1
     },
     everythingElse: {
       isNextFreeAdPostable: true,
       isNextPaidAdPostable: false,
+      freeAdsCount: 0,
+      paidAdsCount: 0,
       currentCount: 0,
       limit: Infinity
     }
@@ -51,8 +61,8 @@ function isEnoughCredits(credits) {
   return false;
 }
 
-function hasFreeAds(currentCount, freeAdsCount) {
-  if (currentCount < freeAdsCount) return true;
+function hasFreeAds(currentCount, freeAdsLimit) {
+  if (currentCount < freeAdsLimit) return true;
   return false;
 }
 
@@ -63,26 +73,28 @@ const simpleReducer = (state = initialState, action) => {
         result: action.payload
       };
     case "INSERT_FREE_AD": {
-      const {
-        [action.payload]: { isNextPaidAdPostable },
-        [action.payload]: { currentCount },
-        [action.payload]: { limit }
-      } = state.categories;
+      const { [action.payload]: currentAd } = state.categories;
+      const { currentCount, limit, freeAdsCount } = currentAd;
 
       const newCount = currentCount + 1;
+      const newFreeAdsCount = freeAdsCount + 1;
       const isNextFreeAdPostable = hasFreeAds(newCount, limit);
+
+      const temp = {
+        ...currentAd,
+        ...{
+          currentCount: newCount,
+          freeAdsCount: newFreeAdsCount,
+          isNextFreeAdPostable
+        }
+      };
 
       const result = {
         categories: {
           ...state.categories,
           ...{
             [action.payload]: {
-              ...{
-                isNextFreeAdPostable,
-                isNextPaidAdPostable,
-                currentCount: newCount,
-                limit
-              }
+              ...temp
             }
           }
         }
@@ -90,15 +102,14 @@ const simpleReducer = (state = initialState, action) => {
       return { ...state, ...result };
     }
     case "INSERT_PAID_AD": {
-      const {
-        [action.payload]: { isNextFreeAdPostable },
-        [action.payload]: { currentCount },
-        [action.payload]: { limit }
-      } = state.categories;
+      const { [action.payload]: currentAd } = state.categories;
+      const { currentCount, paidAdsCount } = currentAd;
+
       const { categories, credits } = state;
 
       const newCredits = credits - 10;
       const newCount = currentCount + 1;
+      const newPaidAdsCount = paidAdsCount + 1;
       const isNextPaidAdPostable = isEnoughCredits(newCredits);
 
       const categoriesArray = Object.keys(categories);
@@ -110,6 +121,8 @@ const simpleReducer = (state = initialState, action) => {
               isNextFreeAdPostable:
                 categories[currentValue].isNextFreeAdPostable,
               isNextPaidAdPostable,
+              freeAdsCount: categories[currentValue].freeAdsCount,
+              paidAdsCount: categories[currentValue].paidAdsCount,
               currentCount: categories[currentValue].currentCount,
               limit: categories[currentValue].limit
             }
@@ -118,18 +131,22 @@ const simpleReducer = (state = initialState, action) => {
         {}
       );
 
+      const temp = {
+        ...currentAd,
+        ...{
+          currentCount: newCount,
+          paidAdsCount: newPaidAdsCount,
+          isNextPaidAdPostable
+        }
+      };
+
       const result = {
         categories: {
           ...state.categories,
           ...recalculateAllCategories,
           ...{
             [action.payload]: {
-              ...{
-                isNextFreeAdPostable,
-                isNextPaidAdPostable,
-                currentCount: newCount,
-                limit
-              }
+              ...temp
             }
           }
         },

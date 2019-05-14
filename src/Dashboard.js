@@ -11,6 +11,7 @@ import {
 } from "./actions";
 import { toastr } from "react-redux-toastr";
 import "react-redux-toastr/lib/css/react-redux-toastr.min.css";
+import Edit from "./Edit";
 
 const Container = styled.div`
   display: grid;
@@ -220,7 +221,9 @@ const Dashboard = props => {
           </Button>
         </Credits>
       </InsertAd>
-      <Manage>All your edit ad goes here</Manage>
+      <Manage>
+        <Edit />
+      </Manage>
     </Container>
   );
 };
