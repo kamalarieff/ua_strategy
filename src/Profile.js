@@ -18,13 +18,6 @@ const Container = styled.div`
   border: 1px solid black;
 `;
 
-const Badge = styled.div`
-  background-color: ${props =>
-    props.visibleToMeOnly ? "palevioletred" : "cadetblue"};
-  border-radius: 10px;
-  padding: 3px 10px;
-`;
-
 const BadgeContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -35,12 +28,6 @@ const BadgeContainer = styled.div`
 const Profile = ({ me, categories }) => (
   <Container>
     <div>Kamal</div>
-    {me.isCarVerified && (
-      <>
-        <Badge>Car verified</Badge>
-        <Badge visibleToMeOnly>{me.carStoreType}</Badge>
-      </>
-    )}
     {categories.cars.isProfileActivated && (
       <BadgeContainer>
         <Icon path={mdiCarSide} size={1} style={{ marginRight: "10px" }} />

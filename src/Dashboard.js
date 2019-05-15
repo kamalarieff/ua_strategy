@@ -9,10 +9,9 @@ import {
   insertPaidAd,
   enablePostAds
 } from "./actions";
-import { toastr } from "react-redux-toastr";
-import "react-redux-toastr/lib/css/react-redux-toastr.min.css";
 import Edit from "./Edit";
 import Profile from "./Profile";
+import InsertAdPanel from "./InsertAdPanel";
 
 const Container = styled.div`
   display: grid;
@@ -58,126 +57,14 @@ const Credits = styled.div`
   width: 100%;
 `;
 
-const ToastrContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  text-align: center;
-`;
-
-const CategoryLimitWithButton1 = props => {
-  return (
-    <div className={props.className}>
-      <h2>
-        {props.title}: {props.count} / {props.limit}
-      </h2>
-      <Button
-        variant="contained"
-        color="primary"
-        style={{ margin: "20px" }}
-        disabled={!props.isNextFreeAdPostable}
-        onClick={props.insertFreeAd}
-      >
-        Insert Free Ad
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        disabled={!props.isNextPaidAdPostable}
-        style={{ margin: "20px" }}
-        onClick={props.insertPaidAd}
-      >
-        Insert Paid Ad
-      </Button>
-    </div>
-  );
-};
-
-const StyledCategoryLimitWithButton1 = styled(CategoryLimitWithButton1)`
-  display: flex;
-  flex-direction: row;
-`;
-
 const Dashboard = props => {
   const { categories, credits, me } = props.simpleReducer;
   const { history } = props;
 
-  const toastrOptions = {
-    timeOut: 3000, // by setting to 0 it will prevent the auto close,
-    component: (
-      <ToastrContainer>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => history.push("/carstore")}
-        >
-          Verify
-        </Button>
-      </ToastrContainer>
-    )
-  };
-
   return (
     <Container>
       <Chart>
-        <StyledCategoryLimitWithButton1
-          title="Cars"
-          count={categories.cars.currentCount}
-          limit={1}
-          isNextPaidAdPostable={categories.cars.isNextPaidAdPostable}
-          isNextFreeAdPostable={categories.cars.isNextFreeAdPostable}
-          insertPaidAd={
-            !me.isCarVerified
-              ? () =>
-                  toastr.warning(
-                    "",
-                    "You need to verify before you can insert a car ad",
-                    toastrOptions
-                  )
-              : () => props.insertPaidAd("cars")
-          }
-          insertFreeAd={() => props.insertFreeAd("cars")}
-          credits={credits}
-        />
-        <StyledCategoryLimitWithButton1
-          title="Property"
-          count={categories.properties.currentCount}
-          limit={1}
-          isNextPaidAdPostable={categories.properties.isNextPaidAdPostable}
-          isNextFreeAdPostable={categories.properties.isNextFreeAdPostable}
-          insertPaidAd={() => props.insertPaidAd("properties")}
-          insertFreeAd={() => props.insertFreeAd("properties")}
-          credits={credits}
-        />
-        <StyledCategoryLimitWithButton1
-          title="Jobs"
-          count={categories.jobs.currentCount}
-          limit={1}
-          isNextPaidAdPostable={categories.jobs.isNextPaidAdPostable}
-          isNextFreeAdPostable={categories.jobs.isNextFreeAdPostable}
-          insertPaidAd={() => props.insertPaidAd("jobs")}
-          insertFreeAd={() => props.insertFreeAd("jobs")}
-          credits={credits}
-        />
-        <StyledCategoryLimitWithButton1
-          title="Mobile Phones"
-          count={categories.mobilePhones.currentCount}
-          limit={1}
-          isNextPaidAdPostable={categories.mobilePhones.isNextPaidAdPostable}
-          isNextFreeAdPostable={categories.mobilePhones.isNextFreeAdPostable}
-          insertPaidAd={() => props.insertPaidAd("mobilePhones")}
-          insertFreeAd={() => props.insertFreeAd("mobilePhones")}
-          credits={credits}
-        />
-        <StyledCategoryLimitWithButton1
-          title="Everything else"
-          count={categories.everythingElse.currentCount}
-          limit={1}
-          isNextPaidAdPostable={categories.everythingElse.isNextPaidAdPostable}
-          isNextFreeAdPostable={categories.everythingElse.isNextFreeAdPostable}
-          insertPaidAd={() => props.insertPaidAd("everythingElse")}
-          insertFreeAd={() => props.insertFreeAd("everythingElse")}
-          credits={credits}
-        />
+        <InsertAdPanel history={history} />
       </Chart>
       <InsertAd>
         <Profile />

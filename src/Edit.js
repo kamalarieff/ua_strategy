@@ -52,7 +52,7 @@ const Edit = ({ categories }) => {
   return (
     <Tabs>
       <TabList>
-        <Tab>Personal</Tab>
+        <Tab>Basic</Tab>
         <Tab disabled={!cars.isProfileActivated}>
           Cars{!cars.isProfileActivated ? <LockIcon /> : ""}
         </Tab>
@@ -68,7 +68,7 @@ const Edit = ({ categories }) => {
       </TabList>
 
       <TabPanel>
-        <h2>Personal</h2>
+        <h2>Basic</h2>
         {FreeAds}
       </TabPanel>
       <TabPanel>
